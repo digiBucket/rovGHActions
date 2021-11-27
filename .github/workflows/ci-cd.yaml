@@ -26,7 +26,7 @@ jobs:
       run: dotnet build ./*.sln --configuration Release --no-restore
 
     - name: rovPUBLISH the project
-      run: dotnet publish ./TheCoreAPI.csproj -c Release -o ${{ env.PUBLISH_PATH }}
+      run: dotnet publish ./TheCoreAPI/TheCoreAPI.csproj -c Release -o ${{ env.PUBLISH_PATH }}
 
     - name: rovUPLOAD ARTIFACTS to gitHub
       uses: actions/upload-artifact@v2
