@@ -24,6 +24,12 @@ jobs:
       run: dotnet build -c Release --no-restore
 
     - name: rovPUBLISH the project
-      run: dotnet publish -c Release -o ./output
+      run: dotnet publish -c Release -o ./runner/staging
+
+    - name: rovUPLOAD ARTIFACTS to gitHub
+      run: actions/upload-artifact@v2
+      with: 
+        name: drop 
+        path: "./runner/staging"
 
    
