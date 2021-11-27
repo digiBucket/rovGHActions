@@ -1,0 +1,27 @@
+name: Rov Continuous Integration and Continuuos Deployment
+
+on:
+  push:  
+    branches: [ master ]
+  
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: rovCheck Out Code
+    - uses: actions/checkout@v2
+
+    - name: rovSetup .NET 4.6.1
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+
+    - name: rovRestore the Dependencies 
+      run: dotnet restore
+
+    - name: rovBuild the API
+      run: dotnet build -c Release --no-restore
+
+    # - name: Test
+    #   run: dotnet test --no-build --verbosity normal
