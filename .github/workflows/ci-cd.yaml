@@ -6,7 +6,7 @@ on:
 
 jobs:
   build:
-    
+
     runs-on: ubuntu-latest    
     env:
       CI: "" 
@@ -37,4 +37,17 @@ jobs:
         name: drop 
         path: ${{ env.PUBLISH_PATH }}
 
-   
+#region
+  deploy:
+    needs: build      #dependency
+    runs-on: ubuntu-latest    
+    env:
+      CD: "" 
+    
+    steps:
+    - name: rovDOWNLOAD ARTIFACTS from gitHub to this runner    
+      uses: actions/download-artifact@v2
+      with: 
+        name: drop 
+        path: './staging'
+#endregion
