@@ -26,12 +26,12 @@ jobs:
       run: dotnet build -c Release --no-restore
 
     - name: rovPUBLISH the project
-      run: dotnet publish -c Release -o ${{ PUBLISH_PATH }}
+      run: dotnet publish -c Release -o ${{ env.PUBLISH_PATH }}
 
     - name: rovUPLOAD ARTIFACTS to gitHub
       uses: actions/upload-artifact@v2
       with: 
         name: drop 
-        path: ${{ PUBLISH_PATH }}
+        path: ${{ env.PUBLISH_PATH }}
 
    
