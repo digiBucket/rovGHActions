@@ -14,24 +14,24 @@ jobs:
       PUBLISH_PATH: './runner/output'
 
     steps:
-    - name: rovCHECK Out Code       
+    - name: Step 1 - CHECK Out Code       
       uses: actions/checkout@v2
 
-    - name: rovSETUP .NET 4.6.1
+    - name: Step 2 - SETUP .NET 4.6.1
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: ${{ env.DOTNET_VERSION }}
 
-    - name: rovRESTORE the Dependencies 
+    - name: Step 3 - RESTORE the Dependencies 
       run: dotnet restore
 
-    - name: rovBUILD the API  
+    - name: Step 4 - BUILD the API  
       run: dotnet build ./*.sln --configuration Release --no-restore
 
-    - name: rovPUBLISH the project
+    - name: Step 5 - PUBLISH the project
       run: dotnet publish ./TheCoreAPI/TheCoreAPI.csproj -c Release -o ${{ env.PUBLISH_PATH }}
 
-    - name: rovUPLOAD ARTIFACTS to gitHub
+    - name: Step 6 - UPLOAD ARTIFACTS to gitHub
       uses: actions/upload-artifact@v2
       with: 
         name: drop 
@@ -45,9 +45,23 @@ jobs:
       CD: "" 
     
     steps:
-    - name: rovDOWNLOAD ARTIFACTS from gitHub to this runner    
+    - name: Step 1 - DOWNLOAD ARTIFACTS from gitHub to this runner    
       uses: actions/download-artifact@v2
       with: 
         name: drop 
         path: './staging'
+          
+    - name: Create release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.github_token }} # This token is provided by Actions, you do not need to create your own token
+      with:
+        tag_name: ${{ github.run_number }}
+        release_name: Release ${{ github.run_number }}
+        body: New release for ${{ github.sha }}. Release notes can be found in the docs.
+        draft: false
+        prerelease: false
+
+    
 #endregion
