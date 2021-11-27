@@ -3,7 +3,9 @@ name: Rov Continuous Integration and Continuuos Deployment
 on:
   push:  
     branches: [ master ]
-  
+env:
+  DOTNET_VERSION: '5.0.x'  
+  PUBLISH_PATH: './runner/output'
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -15,7 +17,7 @@ jobs:
     - name: rovSETUP .NET 4.6.1
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 5.0.x
+        dotnet-version: ${{ env.DOTNET_VERSION }}
 
     - name: rovRESTORE the Dependencies 
       run: dotnet restore
@@ -24,12 +26,12 @@ jobs:
       run: dotnet build -c Release --no-restore
 
     - name: rovPUBLISH the project
-      run: dotnet publish -c Release -o ./runner/staging
+      run: dotnet publish -c Release -o ${{ PUBLISH_PATH }}
 
     - name: rovUPLOAD ARTIFACTS to gitHub
       uses: actions/upload-artifact@v2
       with: 
         name: drop 
-        path: "./runner/staging"
+        path: ${{ PUBLISH_PATH }}
 
    
