@@ -23,7 +23,7 @@ jobs:
       run: dotnet restore
 
     - name: rovBUILD the API  
-      run: dotnet build ./*.sln -configuration Release --no-restore
+      run: dotnet build ./*.sln --configuration Release --no-restore
 
     - name: rovPUBLISH the project
       run: dotnet publish ./TheCoreAPI.csproj -c Release -o ${{ env.PUBLISH_PATH }}
