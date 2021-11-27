@@ -2,7 +2,7 @@ name: Rov Continuous Integration and Continuuos Deployment
 
 on:
   push:  
-    branches: [ master ]
+    branches: [ lab1 ]
 env:
   DOTNET_VERSION: '5.0.x'  
   PUBLISH_PATH: './runner/output'
