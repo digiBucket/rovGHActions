@@ -56,19 +56,19 @@ jobs:
       uses: actions/download-artifact@v2
       with: 
         name: drop
-        path: ./${{ github.sha }}.zip   #TargetPath of where to put the Artifacts in the runner     
+        path: ${{ github.sha }}.zip   #TargetPath of where to put the Artifacts in the runner     
         #path: ./
     - name: zip
-      run: zip –r ${{ github.sha }}.zip ${{ github.sha }}.zip 
+      run: zip –r ${{ github.sha }}.zip ${{ github.sha }}.zip/ 
     - name: Display structure of downloaded files
-      run: ls -R
+      run: ls -lh
     - name: Step 3 - UPLOAD RELEASE ASSET
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.github_token }} 
       with: 
         upload_url: ${{ steps.create_release.outputs.upload_url }}  #id: create_release, above step
-        asset_path: /home/runner/work/rovGHActions/rovGHActions/${{ github.sha }}.zip/TheCoreAPI.dll
+        asset_path: /home/runner/work/rovGHActions/rovGHActions/${{ github.sha }}.zip/${{ github.sha }}.zip
         #asset_path: ./out
         asset_name: source_code_with_libraries.zip
         asset_content_type: application/zip    
