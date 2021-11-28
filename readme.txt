@@ -1,10 +1,9 @@
 
- Here we created 2 workflows-
- 1. JOB 1
-    CheckIn on lab1, builds the code, creates publish package, places Artifacts in GitHub 
-    JOB 2
-    Next Artifacts fron GitHub is downloaded in the runner to deploy in Azure, etc.
- 2. Tag creation(with 'V...') from cmdline creates a Release (with Zipped Source Fies)     
+ Here we create 1 workflows-
+ JOB 1 - Build
+ CheckIn on lab2, builds the code, creates publish package, places Artifacts in GitHub
+ JOB 2 - Publish
+ Download Artifacts 4m GH, Creates Release with system generated Tag, upload Artifacts in Release   
 
 
  
