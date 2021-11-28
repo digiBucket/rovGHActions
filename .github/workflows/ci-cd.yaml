@@ -24,7 +24,8 @@ jobs:
       run: dotnet build ./*.sln --configuration Release --no-restore
 #Create the Publish files & place in a folder in the Runner      
     - name: Step 5 - PUBLISH the project
-      run: dotnet publish ./TheCoreAPI/TheCoreAPI.csproj -c Release -o ${{ env.PUBLISH_PATH }}
+      #run: dotnet publish ./TheCoreAPI/TheCoreAPI.csproj -c Release -o ${{ env.PUBLISH_PATH }}
+      run: dotnet publish ./TheCoreAPI/TheCoreAPI.csproj -c Release -o ${{ github.sha }}.zip
 #Upload the publish Artifacts from Runner Folder to GitHub Drop, so that w can use for deployment
     - name: Step 6 - UPLOAD ARTIFACTS to gitHub
       uses: actions/upload-artifact@v2
