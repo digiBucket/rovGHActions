@@ -31,14 +31,14 @@ jobs:
       uses: actions/upload-artifact@v2
       with: 
         name: drop 
-        path: ${{ env.PUBLISH_PATH }}
-        #path: ${{ github.sha }}.zip 
+        #path: ${{ env.PUBLISH_PATH }}
+        path: ${{ github.sha }}.zip 
 #endregion
-# #region 'JOB 2 : PUBLISH'
-#   deploy:
-#     needs: build      #dependency, first build must run
-#     runs-on: ubuntu-latest            
-#     steps:    
+#region 'JOB 2 : PUBLISH'
+  deploy:
+    needs: build      #dependency, first build must run
+    runs-on: ubuntu-latest            
+    steps:    
 #     - name: Step 1 -CREATE RELEASE
 #       id: create_release  #id - it is a UniqueIdentifier of the Step
 #       uses: actions/create-release@v1
@@ -50,11 +50,12 @@ jobs:
 #         body: New release for ${{ github.sha }}. Release notes LINK can be put here .
 #         draft: false
 #         prerelease: false 
-#     - name: Step 2 - DOWNLOAD ARTIFACTS from gitHub to this runner  
-#       uses: actions/download-artifact@v2
-#       with: 
-#         name: drop
-#         path: ${{ github.sha }}.zip   #downloaded on main work dir ${{ github.sha }}
+    - name: Step 2 - DOWNLOAD ARTIFACTS from gitHub to this runner  
+      uses: actions/download-artifact@v2
+      with: 
+        name: drop
+        path: ${{ github.sha }}.zip   #downloaded on main work dir ${{ github.sha }}
+        run: echo Download Path ${{ github.sha }}.zip
 #     - name: Step 3 - UPLOAD RELEASE ASSET
 #       uses: actions/upload-release-asset@v1
 #       env:
