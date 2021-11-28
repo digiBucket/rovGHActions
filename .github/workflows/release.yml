@@ -1,0 +1,29 @@
+
+#Name of WorkFlow
+name: Release
+#Run on every commit tag which begins with "v" ( eg, "v0.1.4")
+on:
+  push:  
+    tags: 
+     - "v*"
+
+#Build & create artifacts in GitHub 
+jobs: 
+#region 'JOB 1 : RELEASE'
+  release: 
+    name: "Release"
+    runs-on: ubuntu-latest    
+
+    steps:
+    - name: Create release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+      # Token provided by GHActions, we don't need to create our own token
+        GITHUB_TOKEN: ${{ secrets.github_token }} 
+      with:
+        tag_name: ${{ github.run_number }}
+        release_name: Release ${{ github.run_number }}
+        body: New release for ${{ github.sha }}. Release notes can be found in the docs.
+        draft: false
+        prerelease: false        

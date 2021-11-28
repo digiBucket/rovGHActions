@@ -1,12 +1,14 @@
-name: Rov Continuous Integration and Continuuos Deployment
 
+#Name of WorkFlow
+name: Continuous Integration and Deployment
+#Run on every commit to 'lab1' branch
 on:
   push:  
     branches: [ lab1 ]
-
+#Build, Create Artifacts in GitHub & Deploy 
 jobs:
+#region 'JOB 1 : BUILD'
   build:
-
     runs-on: ubuntu-latest    
     env:
       CI: "" 
@@ -16,30 +18,27 @@ jobs:
     steps:
     - name: Step 1 - CHECK Out Code       
       uses: actions/checkout@v2
-
     - name: Step 2 - SETUP .NET 4.6.1
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: ${{ env.DOTNET_VERSION }}
-
     - name: Step 3 - RESTORE the Dependencies 
       run: dotnet restore
-
     - name: Step 4 - BUILD the API  
       run: dotnet build ./*.sln --configuration Release --no-restore
-
+#Create the Publish files & place in a folder in the Runner      
     - name: Step 5 - PUBLISH the project
       run: dotnet publish ./TheCoreAPI/TheCoreAPI.csproj -c Release -o ${{ env.PUBLISH_PATH }}
-
+#Upload the publish Artifacts from Runner Folder to GitHub Drop, so that w can use for deployment
     - name: Step 6 - UPLOAD ARTIFACTS to gitHub
       uses: actions/upload-artifact@v2
       with: 
         name: drop 
         path: ${{ env.PUBLISH_PATH }}
-
-#region
+#endregion
+#region 'JOB 2 : DEPLOY'
   deploy:
-    needs: build      #dependency
+    needs: build      #dependency, first build must run
     runs-on: ubuntu-latest    
     env:
       CD: "" 
@@ -50,18 +49,6 @@ jobs:
       with: 
         name: drop 
         path: './staging'
-          
-    - name: Create release
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.github_token }} # This token is provided by Actions, you do not need to create your own token
-      with:
-        tag_name: ${{ github.run_number }}
-        release_name: Release ${{ github.run_number }}
-        body: New release for ${{ github.sha }}. Release notes can be found in the docs.
-        draft: false
-        prerelease: false
-
+    #-name: Step 2 - Deploy the downloaded Artifacts in Azure, etc.
     
 #endregion
