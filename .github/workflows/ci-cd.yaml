@@ -57,12 +57,12 @@ jobs:
     - name: Step 1 - CHECKOUT CODE
       uses: actions/checkout@v2
     - name: Step 2 - CREATE FOLDER
-      uses: mkdir docs
+      run: mkdir docs
     - name: Step 3 - CONVERT MD TO HTML
-      uses: docker://pandoc/core:2.9
+      uses: docker://pandoc/core:2.9      
       with: 
         args: userguide.md -t html -o docs/index.html 
-    - name: Step 3 - DEPLOY PAGES
+    - name: Step 3 - DEPLOY PAGES SITE
       uses: JamesIves/github-pages-deploy-action@4.1.4
       with:
         folder: docs
