@@ -31,8 +31,8 @@ jobs:
       uses: actions/upload-artifact@v2
       with: 
         name: drop 
-        #path: ${{ env.PUBLISH_PATH }}
-        path: ${{ github.sha }}.zip 
+        path: ${{ env.PUBLISH_PATH }}
+        #path: ${{ github.sha }}.zip 
 #endregion
 # #region 'JOB 2 : PUBLISH'
 #   deploy:
