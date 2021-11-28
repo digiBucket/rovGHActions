@@ -54,8 +54,7 @@ jobs:
       uses: actions/download-artifact@v2
       with: 
         name: drop
-        path: ${{ github.sha }}.zip   #downloaded on main work dir ${{ github.sha }}
-        run: echo Download Path ${{ github.sha }}.zip
+        path: ${{ github.sha }}.zip   #downloaded on main work dir ${{ github.sha }}        
 #     - name: Step 3 - UPLOAD RELEASE ASSET
 #       uses: actions/upload-release-asset@v1
 #       env:
