@@ -68,7 +68,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.github_token }} 
       with: 
         upload_url: ${{ steps.create_release.outputs.upload_url }}  #id: create_release, above step
-        asset_path: /home/runner/work/rovGHActions/rovGHActions/${{ github.sha }}.zip/${{ github.sha }}.zip
+        asset_path: /home/runner/work/rovGHActions/rovGHActions/${{ github.sha }}.zip/TheCoreAPI.dll
         #asset_path: ./out
         asset_name: source_code_with_libraries.zip
         asset_content_type: application/zip    
