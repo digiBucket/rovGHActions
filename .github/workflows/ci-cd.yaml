@@ -1,9 +1,10 @@
 
-#Name of WorkFlow
 name: Continuous Integration and Deployment
 on:
   push:  
-    #branches: [ lab2 ]
+    #branches: [ lab3 ]
+    paths:
+      - userguide.md  #workflow triggers if userguide is modified
 jobs:
 #region 'JOB 1 : BUILD'
   build:
@@ -21,59 +22,49 @@ jobs:
     - name: Step 3 - RESTORE the Dependencies 
       run: dotnet restore
     - name: Step 4 - BUILD the API  
-      run: dotnet build ./*.sln --configuration Release --no-restore
-#Create the Publish files & place in a folder in the Runner      
+      run: dotnet build ./*.sln --configuration Release --no-restore   
     - name: Step 5 - PUBLISH the project
-    
-      #run: dotnet publish ./TheCoreAPI/TheCoreAPI.csproj -c Release -o ${{ env.PUBLISH_PATH }}      
-      run: dotnet publish ./TheCoreAPI/TheCoreAPI.csproj -c Release -o ${{ github.sha }}.zip      
-#Upload the publish Artifacts from Runner Folder to GitHub Drop, so that w can use for deployment
+      run: dotnet publish ./TheCoreAPI/TheCoreAPI.csproj -c Release -o ${{ env.PUBLISH_PATH }}      
     - name: Step 6 - UPLOAD ARTIFACTS to gitHub
       uses: actions/upload-artifact@v2
       with: 
         name: drop 
-        #path: ${{ env.PUBLISH_PATH }}    #Path from where to grab the Artifacts   
-        path: ${{ github.sha }}.zip
+        path: ${{ env.PUBLISH_PATH }}    #Path from where to grab the Artifacts   
 #endregion
-#region 'JOB 2 : PUBLISH'
+
+#region 'JOB 2 : RELEASE 
   deploy:
     needs: build      #dependency, first build must run
     runs-on: ubuntu-latest            
     steps:    
-    - name: Step 1 -CREATE RELEASE
-      id: create_release  #id - it is a UniqueIdentifier of the Step
+    - name: Step 1 -CREATE RELEASE      
       uses: actions/create-release@v1
       env:      
         GITHUB_TOKEN: ${{ secrets.github_token }} 
       with:
-        tag_name: ${{ github.run_number }}  #pre-configured env var that is unique
+        tag_name: ${{ github.run_number }}  
         release_name: Release ${{ github.run_number }}
         body: New release for ${{ github.sha }}. Release notes LINK can be put here .
         draft: false
-        prerelease: false 
-    #download-artifact always downloads and 'UNZIP' files to the target directory    
-    - name: Step 2 - DOWNLOAD ARTIFACTS from gitHub to this runner  
-      uses: actions/download-artifact@v2
+        prerelease: false    
+  #endregion
+        
+  #region 'JOB 3 : DOCUMENTATION'
+  documentation:
+    needs: build      #dependency, first build must run
+    runs-on: ubuntu-latest            
+    steps:  
+    - name: Step 1 - CHECKOUT CODE
+      uses: actions/checkout@v2
+    - name: Step 2 - CREATE FOLDER
+      uses: mkdir docs
+    - name: Step 3 - CONVERT MD TO HTML
+      uses: docker://pandoc/core:2.9
       with: 
-        name: drop
-        path: ${{ github.sha }}.zip   #TargetPath of where to put the Artifacts in the runner     
-        #path: ./
-    - name: zip
-      run: zip -r ../${{ github.sha }}.zip .
-       #run: zip –r ${{ github.sha }}.zip ${{ github.sha }}.zip/ 
-    # - name: Current folder
-    #   run: pwd
-    # - name: Display structure of downloaded files  
-    #   run: ls -lh
-    - name: Step 3 - UPLOAD RELEASE ASSET
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.github_token }} 
-      with: 
-        upload_url: ${{ steps.create_release.outputs.upload_url }}  #id: create_release, above step
-        asset_path: /home/runner/work/rovGHActions/rovGHActions/${{ github.sha }}.zip
-        #asset_path: ./out
-        asset_name: source_code_with_libraries.zip
-        asset_content_type: application/zip    
-    
-# #endregion
+        args: userguide.md -t html -o docs/index.html 
+    - name: Step 3 - DEPLOY PAGES
+      uses: JamesIves/github-pages-deploy-action@4.1.4
+      with:
+        folder: docs
+        branch: gh-pages
+  # #endregion
