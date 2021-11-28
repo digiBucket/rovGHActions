@@ -58,8 +58,8 @@ jobs:
         name: drop
         path: ${{ github.sha }}.zip   #TargetPath of where to put the Artifacts in the runner     
         #path: ./
-     - name: zip
-       run: zip -r ../${{ github.sha }}.zip .
+    - name: zip
+      run: zip -r ../${{ github.sha }}.zip .
        #run: zip –r ${{ github.sha }}.zip ${{ github.sha }}.zip/ 
     # - name: Current folder
     #   run: pwd
