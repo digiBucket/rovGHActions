@@ -62,7 +62,7 @@ jobs:
       run: zip –r ${{ github.sha }}.zip ${{ github.sha }}.zip/ 
     - name: Display structure of downloaded files
       run: pwd
-      run: ls -lh
+      #run: ls -lh
     - name: Step 3 - UPLOAD RELEASE ASSET
       uses: actions/upload-release-asset@v1
       env:
