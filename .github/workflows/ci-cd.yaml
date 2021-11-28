@@ -51,12 +51,15 @@ jobs:
         body: New release for ${{ github.sha }}. Release notes LINK can be put here .
         draft: false
         prerelease: false 
+    #download-artifact always downloads and 'UNZIP' files to the target directory    
     - name: Step 2 - DOWNLOAD ARTIFACTS from gitHub to this runner  
       uses: actions/download-artifact@v2
       with: 
         name: drop
-        path: ./${{ github.sha }}.zip   #Path of where to put the Artifacts in the runner     
+        path: ./${{ github.sha }}.zip   #TargetPath of where to put the Artifacts in the runner     
         #path: ./
+    - name: zip
+      run: zip –r ${{ github.sha }}.zip ${{ github.sha }}.zip 
     - name: Display structure of downloaded files
       run: ls -R
     - name: Step 3 - UPLOAD RELEASE ASSET
