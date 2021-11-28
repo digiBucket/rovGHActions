@@ -30,37 +30,38 @@ jobs:
       uses: actions/upload-artifact@v2
       with: 
         name: drop 
-        path: ${{ env.PUBLISH_PATH }}
+        #path: ${{ env.PUBLISH_PATH }}
+        path: ${{ github.sha }}.zip 
 #endregion
-#region 'JOB 2 : PUBLISH'
-  deploy:
-    needs: build      #dependency, first build must run
-    runs-on: ubuntu-latest            
-    steps:    
-    - name: Step 1 -CREATE RELEASE
-      id: create_release  #id - it is a UniqueIdentifier of the Step
-      uses: actions/create-release@v1
-      env:      
-        GITHUB_TOKEN: ${{ secrets.github_token }} 
-      with:
-        tag_name: ${{ github.run_number }}  #pre-configured env var that is unique
-        release_name: Release ${{ github.run_number }}
-        body: New release for ${{ github.sha }}. Release notes LINK can be put here .
-        draft: false
-        prerelease: false 
-    - name: Step 2 - DOWNLOAD ARTIFACTS from gitHub to this runner  
-      uses: actions/download-artifact@v2
-      with: 
-        name: drop
-        path: ${{ github.sha }}.zip   #downloaded on main work dir ${{ github.sha }}
-    - name: Step 3 - UPLOAD RELEASE ASSET
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.github_token }} 
-      with: 
-        upload_url: ${{ steps.create_release.outputs.upload_url }}  #id: create_release, above step
-        asset_path: ./${{ github.sha }}.zip
-        asset_name: source_code_with_libraries.zip
-        asset_content_type: application/zip    
+# #region 'JOB 2 : PUBLISH'
+#   deploy:
+#     needs: build      #dependency, first build must run
+#     runs-on: ubuntu-latest            
+#     steps:    
+#     - name: Step 1 -CREATE RELEASE
+#       id: create_release  #id - it is a UniqueIdentifier of the Step
+#       uses: actions/create-release@v1
+#       env:      
+#         GITHUB_TOKEN: ${{ secrets.github_token }} 
+#       with:
+#         tag_name: ${{ github.run_number }}  #pre-configured env var that is unique
+#         release_name: Release ${{ github.run_number }}
+#         body: New release for ${{ github.sha }}. Release notes LINK can be put here .
+#         draft: false
+#         prerelease: false 
+#     - name: Step 2 - DOWNLOAD ARTIFACTS from gitHub to this runner  
+#       uses: actions/download-artifact@v2
+#       with: 
+#         name: drop
+#         path: ${{ github.sha }}.zip   #downloaded on main work dir ${{ github.sha }}
+#     - name: Step 3 - UPLOAD RELEASE ASSET
+#       uses: actions/upload-release-asset@v1
+#       env:
+#         GITHUB_TOKEN: ${{ secrets.github_token }} 
+#       with: 
+#         upload_url: ${{ steps.create_release.outputs.upload_url }}  #id: create_release, above step
+#         asset_path: ./${{ github.sha }}.zip
+#         asset_name: source_code_with_libraries.zip
+#         asset_content_type: application/zip    
     
-#endregion
+# #endregion
