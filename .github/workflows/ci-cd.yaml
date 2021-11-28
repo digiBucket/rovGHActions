@@ -8,11 +8,9 @@ jobs:
 #region 'JOB 1 : BUILD'
   build:
     runs-on: ubuntu-latest    
-    env:
-      CI: "" 
+    env:      
       DOTNET_VERSION: '5.0.x'  
       PUBLISH_PATH: './runner/output'
-
     steps:
     - name: Step 1 - CHECK Out Code       
       uses: actions/checkout@v2
@@ -53,8 +51,8 @@ jobs:
     - name: Step 2 - DOWNLOAD ARTIFACTS from gitHub to this runner  
       uses: actions/download-artifact@v2
       with: 
-        name: drop 
-        #path: './staging' //Path not specified, so dnloaded on main work dir ${{ github.sha }}
+        name: zipped-bundle
+        path: ${{ github.sha }}.zip   #downloaded on main work dir ${{ github.sha }}
     - name: Step 3 - UPLOAD RELEASE ASSET
       uses: actions/upload-release-asset@v1
       env:
