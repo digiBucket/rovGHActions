@@ -19,5 +19,13 @@
     Now refresh to see the URL. This URL shows the UserGuide
 
 
-
+GITHUB Pages can be used for -
+   * free hosting of  public site 
+   * hosting of static website like one in S3 bucket
+   * publish/host doc  ( IN this eg we saw hosting a UserGuide docs)  
+     We ust need to designate a branch('gh-pages' here) and point to an index.html page
+   * For Documentation MkDocs or Sphinx can be used
+   * For test result publish as Dashboard
+   * For Project Roadmap
+   
  
