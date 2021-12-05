@@ -1,0 +1,19 @@
+
+name: Check Container Memory 
+on: [push]
+
+jobs:
+  my-job:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: run the action
+      id: hello
+      uses: ./
+      with:
+        myInput: 'Saurov'
+    - name: output the memory
+      run: |
+        echo ${{ steps.hello.outputs.memory }}
+        echo "total memory successfully output"

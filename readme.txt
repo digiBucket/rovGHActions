@@ -1,31 +1,62 @@
+------
+Create a Container Action Using GitHub Actions
+- To optimize the performance of our app, we need to check the memory allocated to the container during build time. 
+Using GH Action, we send input and output params to the runner to insert a greeting & get total memory from the build logs.
 
- USER GUIDE documentation 
- Here the codebase has one UserGuide.md (markdown) file.
- We need to Trigger the Release workflow only if this UserGuide doc is modified 
-    to ascertain that the UserGuide remains updated always
- 
- create 1 workflows-
- JOB 1 - Build
- JOB 2 - Documentation 
+1. Create a Shell Script to Output Memory Info ("entrypoint.sh")
 
-  We 
-  Create a dir(docs) in runner
-  Convert markdown file into HTML-> using PANDOC (an opensource & comes in a Docker container)
-  Rename the converted md as index.html and place in the folder(docs)
-  Deploy this to GitHub pages using community actions
+#!/bin/sh
 
- After running the WorkFlow & doc is published, 
-    in GitHub GOTO - Settings>Pages>Source - pick 'gh-pages' - SAVE
-    Now refresh to see the URL. This URL shows the UserGuide
+echo "Hello $INPUT_MYINPUT"                             //builtin var
+memory=$(cat /proc/meminfo)                                //another env variable   (meminfor for linux is located here)
+echo "::set-output name=memory::$memory"         //github syntax to output var into the action is ::
+
+2. Create a Container to Run the Action ("Dockerfile")
+
+FROM debian:9.5-slim
+ADD entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+ENTRYPOINT ["/entrypoint.sh"]
+
+3. Add  "action.yml"
+
+name: 'my first container action'
+description: 'A cloud guru'
+author: 'Rov Sattha'
+inputs:
+  myInput:
+    description: 'greeting to use'
+    required: true
+    default: 'Awesome Guru'
+outputs:
+  myOutput:
+    description: 'total memory'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
 
 
-GITHUB Pages can be used for -
-   * free hosting of  public site 
-   * hosting of static website like one in S3 bucket
-   * publish/host doc  ( IN this eg we saw hosting a UserGuide docs)  
-     We ust need to designate a branch('gh-pages' here) and point to an index.html page
-   * For Documentation MkDocs or Sphinx can be used
-   * For test result publish as Dashboard
-   * For Project Roadmap
-   
- 
+4. Add Workflow ".github/workflows/workflow.yml" 
+
+on: [push]
+
+jobs:
+  my-job:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: run the action
+      id: hello
+      uses: ./
+      with:
+        myInput: 'Chad'
+    - name: output the memory
+      run: |
+        echo ${{ steps.hello.outputs.memory }}
+        echo "total memory successfully output"
+
+
+
+Expand the run the action step and verify the hello greeting.
+Expand the output and verify the presence of the "total memory successfully output" message.
